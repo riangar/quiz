@@ -38,8 +38,17 @@ sequelize.sync().success(function() {
 		if (count === 0) {
 			Quiz.create({ pregunta: 'Capital de Italia',
 						  respuesta: 'Roma'
-						})
-			.success(function(){ console.log('Base de datos inicializada')});
+						});
+			Quiz.create({ pregunta: 'Capital de Portugal',
+						  respuesta: 'Lisboa'
+						});
+			Quiz.create({ pregunta: 'Capital de Austria',
+						  respuesta: 'Viena'
+						});
+			Quiz.create({ pregunta: 'Capital de Grecia',
+						  respuesta: 'Atenas'
+						})		
+			.then(function(){ console.log('Base de datos inicializada')});
 		};
 	});
 });
