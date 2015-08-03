@@ -61,3 +61,30 @@ exports.create = function(req, res) {
 		}); 
 	}
 };
+
+exports.edit = function(req, res) {
+	var quiz = req.quiz;
+	
+	res.render('quizes/edit', {quiz: quiz, errors: []});
+};
+
+exports.update = function(req, res) {
+	req.quiz.pregunta = req.body.quiz.pregunta;
+	req.quiz.respuesta = req.body.quiz.respuesta //el id ya nos viene del Autoload
+	
+	var quiz = req.quiz;
+
+	var errors = quiz.validate(); //ya que el objeto errors no tiene then(
+	if (errors)	{
+		var i = 0; 
+		var errores = new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
+		for (var prop in errors) errores[i++] = {message: errors[prop]};	
+		res.render('quizes/edit', {quiz: quiz, errors: errores});
+	} else {
+		quiz // save: guarda en DB campos pregunta y respuesta de quiz
+		.save({fields: ["pregunta", "respuesta"]})
+		.then( function(){ 
+			res.redirect('/quizes'); // redirige al listado de preguntas
+		}); 
+	}
+};
