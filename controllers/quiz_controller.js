@@ -39,7 +39,7 @@ exports.answer = function(req, res) {
 // GET /quizes/new
 exports.new = function(req, res) {
 	var quiz = models.Quiz.build ( // crea objeto quiz
-		{pregunta: "Pregunta", respuesta: "Respuesta"}
+		{pregunta: "Pregunta", respuesta: "Respuesta", tema: "otro"}
 	);
 	
 	res.render('quizes/new', {quiz: quiz, errors: []});
@@ -57,7 +57,7 @@ exports.create = function(req, res) {
 		res.render('quizes/new', {quiz: quiz, errors: errores});
 	} else {
 		quiz // save: guarda en DB campos pregunta y respuesta de quiz
-		.save({fields: ["pregunta", "respuesta"]})
+		.save({fields: ["pregunta", "respuesta", "tema"]})
 		.then( function(){ 
 			res.redirect('/quizes'); // redirige al listado de preguntas
 		}); 
@@ -74,8 +74,9 @@ exports.edit = function(req, res) {
 // PUT /quizes/:id
 exports.update = function(req, res) {
 	req.quiz.pregunta = req.body.quiz.pregunta;
-	req.quiz.respuesta = req.body.quiz.respuesta //el id ya nos viene del Autoload
-	
+	req.quiz.respuesta = req.body.quiz.respuesta; //el id ya nos viene del Autoload
+	req.quiz.tema = req.body.quiz.tema;
+
 	var quiz = req.quiz;
 
 	var errors = quiz.validate(); //ya que el objeto errors no tiene then(
@@ -86,7 +87,7 @@ exports.update = function(req, res) {
 		res.render('quizes/edit', {quiz: quiz, errors: errores});
 	} else {
 		quiz // save: guarda en DB campos pregunta y respuesta de quiz
-		.save({fields: ["pregunta", "respuesta"]})
+		.save({fields: ["pregunta", "respuesta", "tema"]})
 		.then( function(){ 
 			res.redirect('/quizes'); // redirige al listado de preguntas
 		}); 
