@@ -36,6 +36,7 @@ exports.answer = function(req, res) {
    	res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: [] });		
 };
 
+// GET /quizes/new
 exports.new = function(req, res) {
 	var quiz = models.Quiz.build ( // crea objeto quiz
 		{pregunta: "Pregunta", respuesta: "Respuesta"}
@@ -44,6 +45,7 @@ exports.new = function(req, res) {
 	res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
+// PUT /quizes/create
 exports.create = function(req, res) {
 	var quiz = models.Quiz.build ( req.body.quiz);
 	
@@ -62,12 +64,14 @@ exports.create = function(req, res) {
 	}
 };
 
+// GET /quizes/:id/edit
 exports.edit = function(req, res) {
 	var quiz = req.quiz;
 	
 	res.render('quizes/edit', {quiz: quiz, errors: []});
 };
 
+// PUT /quizes/:id
 exports.update = function(req, res) {
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta //el id ya nos viene del Autoload
@@ -87,4 +91,11 @@ exports.update = function(req, res) {
 			res.redirect('/quizes'); // redirige al listado de preguntas
 		}); 
 	}
+};
+
+// DELETE /quizes/:id
+exports.destroy = function(req, res) {
+	req.quiz.destroy().then(function(){
+		res.redirect('/quizes');
+	}).catch(function(error) { next(error)});
 };
