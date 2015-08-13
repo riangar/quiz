@@ -41,6 +41,31 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Auto-logout
+app.use(function(req, res, next) {
+    if (req.session.user && req.session.lastAction) {
+        if (Date.now() - req.session.lastAction > 120000) {
+            delete req.session.user;
+            req.session.errors = [{"message": 'Su sesión ha caducado, por favor vuelva a introducir usuario y contraseña.'}];
+            // Si la acción que se iba a ejecutar es la publicación de un comentario se modifica la redirección:
+            // Se cambia la redirección a la página principal por la siguiente razón:
+            // si se pulsa en el botón "Publicar" justo después de que caduque la sesión, en cuanto
+            // el usuario vuelva a hacer el login va a cargar la acción "publish" y se va a publicar
+            // el comentario. Para que no quede publicado vamos a la página principal.
+            if (req.session.redir.match(/\/publish/)) req.session.redir = '/';
+            req.session.lastAction = new Date().getTime();
+            // Se redirige a la página de Login
+            res.redirect("/login"); 
+        } else { 
+            req.session.lastAction = new Date().getTime();
+            next(); 
+        }
+    } else { 
+        req.session.lastAction = new Date().getTime(); 
+        next();
+    }
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
