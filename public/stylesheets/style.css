@@ -12,3 +12,7 @@ nav span             { margin: 0px 10px 0px 0px;}
 
 #ErrorMsgs			 { color: #f61; font-size: smaller;}
 .right 				 {float: right;}
+
+#statistics			 { padding: 20px; text-align: center;}
+.table-left			 { text-align: left; border: 1px solid #000; margin: 0 auto;}
+.table-left tr td	 { padding: 5px; border: 1px solid #000;}
